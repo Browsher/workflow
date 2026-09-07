@@ -55,4 +55,17 @@ describe('cadastrarContato', () => {
     expect(await cadastrarContato({ nome: 'Ana', email: '@exemplo.com' }, repo))
       .toEqual({ ok: false, motivo: 'email_invalido' })
   })
+
+  it('não consulta nem salva no repositório quando a entrada é inválida', async () => {
+    const repo: RepositorioContatos = {
+      buscarPorEmailNormalizado: vi.fn(async () => null),
+      salvar: vi.fn(async () => {}),
+    }
+
+    await cadastrarContato({ nome: '', email: 'ana@exemplo.com' }, repo)
+    await cadastrarContato({ nome: 'Ana', email: 'sem-arroba' }, repo)
+
+    expect(repo.buscarPorEmailNormalizado).not.toHaveBeenCalled()
+    expect(repo.salvar).not.toHaveBeenCalled()
+  })
 })
