@@ -13,6 +13,9 @@ export async function cadastrarContato(
   entrada: EntradaCadastro,
   repositorio: RepositorioContatos,
 ): Promise<ResultadoCadastro> {
+  const nome = entrada.nome.trim()
+  if (nome === '') return { ok: false, motivo: 'nome_obrigatorio' }
+
   const emailNormalizado = normalizarEmail(entrada.email)
 
   const existente = await repositorio.buscarPorEmailNormalizado(emailNormalizado)
@@ -20,7 +23,7 @@ export async function cadastrarContato(
 
   const contato: Contato = {
     id: crypto.randomUUID(),
-    nome: entrada.nome.trim(),
+    nome,
     email: entrada.email.trim(),
     emailNormalizado,
   }
