@@ -9,6 +9,15 @@ export type ResultadoCadastro =
   | { ok: true; contato: Contato }
   | { ok: false; motivo: MotivoFalha }
 
+function temFormatoDeEmail(email: string): boolean {
+  const partes = email.split('@')
+  if (partes.length !== 2) return false
+  const [local, dominio] = partes
+  if (local.length === 0) return false
+  const pedacos = dominio.split('.')
+  return pedacos.length >= 2 && pedacos.every((p) => p.length > 0)
+}
+
 export async function cadastrarContato(
   entrada: EntradaCadastro,
   repositorio: RepositorioContatos,
@@ -17,6 +26,7 @@ export async function cadastrarContato(
   if (nome === '') return { ok: false, motivo: 'nome_obrigatorio' }
 
   const emailNormalizado = normalizarEmail(entrada.email)
+  if (!temFormatoDeEmail(emailNormalizado)) return { ok: false, motivo: 'email_invalido' }
 
   const existente = await repositorio.buscarPorEmailNormalizado(emailNormalizado)
   if (existente) return { ok: false, motivo: 'email_duplicado' }

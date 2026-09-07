@@ -37,4 +37,22 @@ describe('cadastrarContato', () => {
     expect(await cadastrarContato({ nome: '   ', email: 'ana@exemplo.com' }, repo))
       .toEqual({ ok: false, motivo: 'nome_obrigatorio' })
   })
+
+  it('rejeita e-mail sem @', async () => {
+    const repo = new RepositorioContatosEmMemoria()
+    expect(await cadastrarContato({ nome: 'Ana', email: 'ana.exemplo.com' }, repo))
+      .toEqual({ ok: false, motivo: 'email_invalido' })
+  })
+
+  it('rejeita e-mail sem ponto no domínio', async () => {
+    const repo = new RepositorioContatosEmMemoria()
+    expect(await cadastrarContato({ nome: 'Ana', email: 'ana@exemplo' }, repo))
+      .toEqual({ ok: false, motivo: 'email_invalido' })
+  })
+
+  it('rejeita e-mail sem nada antes do @', async () => {
+    const repo = new RepositorioContatosEmMemoria()
+    expect(await cadastrarContato({ nome: 'Ana', email: '@exemplo.com' }, repo))
+      .toEqual({ ok: false, motivo: 'email_invalido' })
+  })
 })
