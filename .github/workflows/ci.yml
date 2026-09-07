@@ -1,4 +1,4 @@
-name: CI
+﻿name: CI
 
 on:
   pull_request:
@@ -11,26 +11,18 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: pnpm/action-setup@v4
-        with:
-          version: 9
-
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: pnpm
+          cache: npm
 
-      - run: pnpm install --frozen-lockfile
+      - run: npm ci
 
-      # Catraca 1 — o TypeScript tem que fechar
       - name: Typecheck
-        run: pnpm typecheck
+        run: npm run typecheck
 
-      # Catraca 2 — lint
       - name: Lint
-        run: pnpm lint
+        run: npm run lint
 
-      # Catraca 3 — testes passando e cobertura mínima
-      # Suba o threshold aos poucos. Começa em 50, não em 90.
       - name: Testes
-        run: pnpm vitest run --coverage
+        run: npm test
