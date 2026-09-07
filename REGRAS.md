@@ -55,4 +55,14 @@ Tipo: bilhete
 
 ---
 
+## R-006 — PowerShell 5.1 engole o `--` em comandos com flags repassadas
+
+O que aconteceu: `claude mcp add obsidian -- npx -y obsidian-mcp <path>`
+falhou com "unknown option" porque o PowerShell descartou o `--` e passou
+o `-y` para o próprio claude.
+A regra: usar `--%` antes dos argumentos, ou rodar pelo Git Bash.
+Tipo: bilhete
+
+---
+
 <!-- próximas regras aqui -->
